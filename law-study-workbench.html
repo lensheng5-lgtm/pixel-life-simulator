@@ -2482,28 +2482,53 @@ textarea:hover {
   color: var(--error);
 }
 
+.settings-autosave-card,
 .settings-font-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 0.9fr);
   align-items: center;
   gap: 18px;
-  margin-top: 16px;
   padding: 14px 16px;
   border: 1px solid var(--rule);
   background: var(--paper);
 }
 
+.settings-autosave-card {
+  margin-top: 16px;
+}
+
+.settings-font-card {
+  margin-top: 10px;
+}
+
+.settings-autosave-card h3,
 .settings-font-copy h3 {
   margin: 0;
   font-family: var(--font-serif);
   font-size: calc(16px * var(--text-scale));
 }
 
+.settings-autosave-card p,
 .settings-font-copy p {
   margin: 4px 0 0;
   color: var(--muted);
   font-size: calc(11px * var(--text-scale));
   line-height: 1.5;
+}
+
+.settings-autosave-card strong {
+  display: block;
+  margin-top: 7px;
+  color: var(--success);
+  font-size: calc(11px * var(--text-scale));
+  font-weight: 500;
+}
+
+.settings-backup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
 .font-scale-control {
@@ -2719,9 +2744,14 @@ textarea:hover {
     grid-column: auto;
   }
 
+  .settings-autosave-card,
   .settings-font-card {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+
+  .settings-backup-actions {
+    justify-content: flex-start;
   }
 
   .question-command-nav {
@@ -2909,11 +2939,6 @@ textarea:hover {
           <button class="icon-button" type="button" data-action="open-search" data-search-context="global" aria-label="全站搜索">
             <span data-icon="search"></span>
           </button>
-          <button class="btn btn-quiet" type="button" data-action="export">导出</button>
-          <label class="btn btn-quiet file-button">
-            导入
-            <input id="importInput" type="file" accept="application/json,.json">
-          </label>
           <button class="icon-button" type="button" data-action="open-settings" aria-label="设置">
             <span data-icon="settings"></span>
           </button>
@@ -3002,6 +3027,20 @@ textarea:hover {
           <span data-icon="close"></span>
         </button>
       </div>
+      <section class="settings-autosave-card" aria-labelledby="autoSaveTitle">
+        <div>
+          <h3 id="autoSaveTitle">自动保存</h3>
+          <p>答题、概念卡、学习时长和批注会随时保存到当前浏览器。只有换设备、换浏览器或清理缓存前，才需要导出备份。</p>
+          <strong id="settingsSaveStatus">已自动保存</strong>
+        </div>
+        <div class="settings-backup-actions">
+          <button class="btn" type="button" data-action="export">导出备份</button>
+          <label class="btn btn-quiet file-button">
+            恢复备份
+            <input id="importInput" type="file" accept="application/json,.json">
+          </label>
+        </div>
+      </section>
       <div class="form-grid">
         <label>
           <span>每天大概学多久</span>
@@ -12930,6 +12969,7 @@ window.SOURCE_LAW_QUESTIONS = [
     });
   });
   const STORAGE_KEY = "law-workbench-state-v1";
+  const STORAGE_BACKUP_KEY = "law-workbench-state-v1-backup";
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
 
@@ -13101,12 +13141,20 @@ window.SOURCE_LAW_QUESTIONS = [
   }
 
   function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? normalizeState(JSON.parse(raw)) : defaultState();
-    } catch (error) {
-      return defaultState();
+    let latest = null;
+    for (const key of [STORAGE_KEY, STORAGE_BACKUP_KEY]) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) continue;
+        const candidate = normalizeState(JSON.parse(raw));
+        if (!latest || String(candidate.updatedAt || "").localeCompare(String(latest.updatedAt || "")) > 0) {
+          latest = candidate;
+        }
+      } catch (error) {
+        // Try the secondary snapshot before falling back to a fresh state.
+      }
     }
+    return latest || defaultState();
   }
 
   let state = loadState();
@@ -13127,6 +13175,7 @@ window.SOURCE_LAW_QUESTIONS = [
 
   let toastTimer = null;
   let timerTicker = null;
+  let autoSaveTicker = null;
   let initialized = false;
 
   function currentCourse() {
@@ -13168,21 +13217,40 @@ window.SOURCE_LAW_QUESTIONS = [
     return state.modeStats[state.activeMode];
   }
 
-  function saveState() {
-    state.updatedAt = new Date().toISOString();
+  function formatSaveTime(iso) {
+    if (!iso) return "";
+    return new Date(iso).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function updateSaveStatus(iso, failed = false) {
+    const rail = $("#saveStatus");
+    const settings = $("#settingsSaveStatus");
+    if (rail) {
+      rail.textContent = failed ? "保存失败" : `自动保存 ${formatSaveTime(iso)}`.trim();
+      rail.style.color = failed ? "var(--error)" : "";
+    }
+    if (settings) {
+      settings.textContent = failed ? "保存失败，请先导出备份" : `已自动保存${iso ? ` · ${formatSaveTime(iso)}` : ""}`;
+      settings.style.color = failed ? "var(--error)" : "";
+    }
+  }
+
+  function saveState(options = {}) {
+    const { touch = true, silent = false } = options;
+    if (touch) state.updatedAt = new Date().toISOString();
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      const el = $("#saveStatus");
-      if (el) {
-        el.textContent = "已保存";
-        el.style.color = "";
+      const payload = JSON.stringify(state);
+      localStorage.setItem(STORAGE_KEY, payload);
+      try {
+        localStorage.setItem(STORAGE_BACKUP_KEY, payload);
+      } catch (backupError) {
+        // The primary snapshot is already saved; keep working even if the mirror is unavailable.
       }
+      updateSaveStatus(state.updatedAt);
+      return true;
     } catch (error) {
-      const el = $("#saveStatus");
-      if (el) {
-        el.textContent = "未保存";
-        el.style.color = "var(--error)";
-      }
+      if (!silent) updateSaveStatus(state.updatedAt, true);
+      return false;
     }
   }
 
@@ -14594,11 +14662,11 @@ window.SOURCE_LAW_QUESTIONS = [
         <div>
           <div class="context-line"><strong>${escapeHtml(currentCourse().name)}</strong><span class="context-sep">/</span><span>学习档案</span></div>
           <h2>学习档案</h2>
-          <p>这里记录你真正做过的事：学过多久、做过多少题、哪些卡已经稳住，以及哪些错题还没回头。</p>
+          <p>学习记录会自动保存到当前浏览器。这里显示你真正做过的事，导出和导入只用于换设备或清理缓存前备份。</p>
         </div>
         <div class="view-actions">
-          <button class="btn" type="button" data-action="export">${icon("archive")} 导出档案</button>
-          <label class="btn btn-ghost file-button">导入档案<input id="importInputSecondary" type="file" accept="application/json,.json"></label>
+          <button class="btn" type="button" data-action="export">${icon("archive")} 导出备份</button>
+          <label class="btn btn-ghost file-button">恢复备份<input id="importInputSecondary" type="file" accept="application/json,.json"></label>
         </div>
       </header>
       <div class="archive-stats">
@@ -14635,7 +14703,7 @@ window.SOURCE_LAW_QUESTIONS = [
       </section>
       <div class="note-disclaimer">
         <strong>关于“记忆”</strong><br>
-        概念卡会用间隔复习安排下一次出现：没想起来就明天再来，模糊就两三天后再看，想起来了就往后放。题目按正确率和错题状态跟着复习。记录保存在本机浏览器，换设备前请先导出 JSON 档案。
+        答题、选卡、学习时长、错题和批注都会自动保存到本机浏览器，不需要每次手动导出。概念卡会安排下一次出现：没想起来就明天再来，模糊就两三天后再看，想起来了就往后放。只有换设备、换浏览器或清理浏览器数据前，才需要导出 JSON 备份。
       </div>
     `;
   }
@@ -15016,7 +15084,7 @@ window.SOURCE_LAW_QUESTIONS = [
     link.click();
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
-    showToast("学习档案已导出");
+    showToast("学习备份已导出");
   }
 
   async function importArchive(file) {
@@ -15036,7 +15104,7 @@ window.SOURCE_LAW_QUESTIONS = [
       saveState();
       closeSettings();
       render();
-      showToast("学习档案已导入");
+      showToast("学习备份已恢复");
     } catch (error) {
       showToast("导入失败：文件不是有效的学习档案");
     }
@@ -15579,6 +15647,23 @@ window.SOURCE_LAW_QUESTIONS = [
         }
       }
     });
+
+    window.addEventListener("pagehide", () => {
+      saveState({ touch: false, silent: true });
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        saveState({ touch: false, silent: true });
+      }
+    });
+
+    clearInterval(autoSaveTicker);
+    autoSaveTicker = setInterval(() => {
+      if (document.visibilityState === "visible") {
+        saveState({ touch: false, silent: true });
+      }
+    }, 15000);
   }
 
   function init() {
@@ -15586,6 +15671,7 @@ window.SOURCE_LAW_QUESTIONS = [
     initialized = true;
     ensureDay();
     applyTextScale(state.settings.fontScale);
+    saveState({ touch: false, silent: true });
     hydrateStaticIcons();
     bindEvents();
     if (state.timer.startedAt) startTimerTicker();
