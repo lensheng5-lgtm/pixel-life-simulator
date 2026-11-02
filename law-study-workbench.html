@@ -12576,6 +12576,625 @@ window.SOURCE_LAW_QUESTIONS = [
 (function () {
   "use strict";
 
+  const promptOverrides = {
+    "source-constitution-009": "我国《立法法》明确规定： “ 宪法具有最高的法律效力，一切法律、行政法规、地方性法规、自治条例和单行条例、规章都不得同宪法相抵触。 ” 关于这一规定的理解，下列哪一选项是正确的？（）[2016 年法考真题]",
+    "source-constitution-013": "我国《宪法》第三十八条明确规定： “ 中华人民共和国公民的人格尊严不受侵犯。 ” 关于该条文所表现的宪法规范，下列哪些选项是正确的？（）[2015 年法考真题改编]",
+    "source-constitution-024": "1949 年 9 月，中国人民政治协商会议制定了《中国人民政治协商会议共同纲领》。关于《中国人民政治协商会议共同纲领》，下列说法正确的有（）。[2019 年法考真题]",
+    "source-constitution-025": "序言是我国现行宪法的重要组成部分，现行宪法的 5 次部分修改，其中有 4 次对序言进行了修改。关于对宪法序言的修改，下列说法错误的有（）。[2019 年法考真题]",
+    "source-constitution-035": "十二届全国人大常委会，第二十九次会议通过了《国歌法》并于 2017 年 10 月 1 日起施行，根据《宪法》和《国歌法》。关于国歌，下列哪项不正确？（）[2018 年法考真题]",
+    "source-constitution-048": "2014 年春节期间，县人大代表刘某因酒后交通肇事逃逸，涉嫌犯罪，县公安局拟对其实施逮捕。对此，下列做法中正确的是（）。[2015 年法硕（非法学）真题]",
+    "source-constitution-052": "某乡政府为有效指导、支持和帮助村民委员会的工作，根据相关法律法规，结合本乡实际作出了下列规定，其中哪一规定是合法的？（）[2016 年法考真题]",
+    "source-constitution-057": "国家的基本社会制度是国家制度体系中的重要内容。根据我国宪法规定，关于国家基本社会制度，下列哪一表述是正确的？（）[2015 年法考真题]",
+    "source-constitution-062": "某村村委会未经村民会议讨论，制定了土地承包经营方案，侵害了村民的合法权益，引发了村民的强烈不满。根据《村民委员会组织法》的规定，下列哪些做法是正确的？（）[2015 年法考真题]",
+    "source-constitution-065": "我国的基本社会制度是基于经济、政治、文化、社会、生态文明五位一体的社会主义建设的需要，在社会领域所建构的制度体系。关于国家的基本社会制度，下列哪些选项是正确的？（）[2016 年法考真题]",
+    "source-constitution-069": "我国宪法序言规定： “ 中国共产党领导的多党合作和政治协商制度将长期存在和发展。 ” 关于中国人民政治协商会议，下列选项正确的是（）。[2017 年法考真题]",
+    "source-constitution-070": "某市执法部门发布通告： “ 为了进一步提升本市市容和环境卫生整体水平，根据相关规定，全市范围内禁止设置各类横幅标语。 ” 根据该通告，关于禁设横幅标语，下列哪一说法是正确的？（）[2017 年法考真题]",
+    "source-constitution-082": "我国《宪法》第 13 条规定： “ 公民的合法的私有财产不受侵犯。国家依照法律规定保护公民的私有财产权和继承权。 ” 关于这一规定，下列哪些说法是正确的？（）[2017 年法考真题]",
+    "source-constitution-083": "张某对当地镇政府干部王某的工作提出激烈批评，引起群众热议，被公安机关以诽谤他人为由行政拘留 5 日。张某的精神因此受到严重打击，事后相继申请行政复议和提起行政诉讼，法院依法撤销了公安机关《行政处罚决定书》。随后，张某申请国家赔偿。根据《宪法》和法律的规定，关于本案的分析，下列哪些选项是正确的？（）[2016 年法考真题]",
+    "source-constitution-085": "某县政府以较低补偿标准进行征地拆迁。张某因不同意该补偿标准，拒不拆迁自己的房屋。为此，县政府责令张某的儿子所在中学不为其办理新学期注册手续，并通知财政局解除张某的女婿李某（财政局工勤人员）与该局的劳动合同。张某最终被迫签署了拆迁协议。关于当事人被侵犯的权利，下列选项正确的是（）。[2015 年法考真题]",
+    "source-constitution-087": "我国宪法明确规定： “ 国家为了公共利益的需要，可以依照法律规定对公民的私有财产实行征收或者征用并给予补偿。 ” 关于公民财产权限制的界限，下列选项正确的是（）。[2016 年法考真题]",
+    "source-constitution-092": "根据省政府制定的地方规章，省质监部门对生产、销售不合格产品的某公司予以行政处罚。被处罚人认为，该省政府规章违反《产品质量法》规定，不能作为处罚依据，遂向法院起诉，请求撤销该行政处罚。关于对该省政府规章是否违法的认定及其处理，下列哪一选项是正确的？（）[2012 年法考真题]",
+    "source-constitution-098": "某县人大闭会期间，赵某和钱某因工作变动，分别辞去县法院院长和检察院检察长职务。法院副院长孙某任代理院长，检察院副检察长李某任代理检察长。对此，根据《宪法》和法律，下列哪一说法是正确的？（）[2017 年法考真题]",
+    "source-constitution-107": "我国《宪法》第二条明确规定： “ 人民行使国家权力的机关是全国人民代表大会和地方各级人民代表大会。 ” 关于全国人大和地方各级人大，下列选项正确的是（）。[2015 年法考真题]",
+    "source-constitution-124": "《全国人民代表大会常务委员会关于实行宪法宣誓制度的决定》于 2016 年 1 月 1 日起实施。关于宪法宣誓制度的表述，下列哪些选项是正确的？（）[2016 年法考真题]",
+    "source-jurisprudence-006": "我国《消费者权益保护法》第四十九条规定： “ 经营者提供商品或者服务，造成消费者或者其他受害人人身伤害的，应当赔偿医疗费、护理费、交通费等为治疗和康复支出的合理费用，以及因误工减少的收入 ……” 该规则不属于（）。[2019 年法硕（非法学）真题]",
+    "source-jurisprudence-007": "我国刑法第 21 条第 1 款规定： “ 为了使国家、公共利益、本人或者他人的人身、财产和其他权利免受正在发生的危险，不得已采取的紧急避险行为，造成损害的，不负刑事责任。 ” 关于该法条中包含的法律规则的逻辑结构，下列表述正确的是（）。[2017 年法硕（非法学）真题]",
+    "source-jurisprudence-008": "全兆公司利用提供互联网接入服务的便利，在搜索引擎讯集公司网站的搜索结果页面上强行增加广告，被讯集公司诉至法院。法院认为，全兆公司行为违反诚实信用原则和公认的商业道德，构成不正当竞争。关于该案，下列哪一说法是正确的？（）[2016 年法考真题]",
+    "source-jurisprudence-009": "我国《行政处罚法》第五条规定： “ 实施行政处罚，纠正违法行为，应当坚持处罚与教育相结合，教育公民、法人或者其他组织自觉守法。 ” 对此，下列说法正确的是（）。[2020 年法硕（法学、非法学）真题]",
+    "source-jurisprudence-010": "《刑法》第 93 条第 2 款规定： “ 国有公司、企业、事业单位、人民团体中从事公务的人员和国家机关、国有公司、企业、事业单位委派到非国有公司、企业、事业单位、社会团体从事公务的人员，以及其他依照法律从事公务的人员，以国家工作人员论。 ” 下列关于该法律条文的认识，正确的是（）。[2015 年法硕（非法学）真题]",
+    "source-jurisprudence-015": "马克思认为，法律是一定的物质生产方式所产生的社会共同利益需要的表现，而不是单个人的恣意横行。对于这一观点，下列理解正确的是（）。[2019 年法硕（非法学）真题]",
+    "source-jurisprudence-016": "有学者这样解释法的产生：最初的纠纷解决方式可能是双方找到一位共同信赖的长者，向他讲述事情的原委并由他作出裁决；但是当纠纷多到需要占用一百位长者的全部时间时，一种制度化的纠纷解决机制就成为必要了，这就是最初的法律。对此，下列哪一说法是正确的？（）[2017 年法考真题]",
+    "source-jurisprudence-018": "关于英美、大陆两大法系特点的表述有：①以判例法为主要渊源；②以制定法为主要渊源；③以日耳曼法为历史渊源；④法官对法律的发展起举足轻重的作用；⑤以归纳为主要推理方法；⑥以演绎法为主要推理方法；⑦诉讼程序传统上倾向于职权主义，法官起积极主动的作用。下列哪一归纳是正确的？（） [2017 年法考真题]",
+    "source-jurisprudence-020": "出租车司机甲送孕妇乙去医院，途中乙临产，情形危急。为争取时间，甲将车开至非机动车道掉头，被交警拦截并被告知罚款。经甲解释，交警对甲未予处罚且为其开警车引道，将乙及时送至医院。但该孕妇送至医院后，医生以病人家属未签字为由，未对孕妇施救。出租车司机欲签字，但该医生以出租车司机非患者家属为由拒绝。最终，孕妇不幸身亡。对此事件，下列表述正确的是（）。[2019 年法考真题]",
+    "source-jurisprudence-021": "2016 年 12 月 16 日，教育部颁布了新修订的《普通高等学校学生管理规定》，其中第 55 条第 1 款规定，在对学生作出处分或其他不利决定之前，学校应当告知学生作出决定的事实，理由和依据，并告知学生具有陈述和申辩的权利，听取学生的陈述和申辩。该规定集中体现的法律价值是（）。[2018 年法硕（非法学）真题]",
+    "source-jurisprudence-022": "秦某以虚构言论、合成图片的手段在网上传播多条 “ 警察打人 ” 的信息，造成恶劣影响，县公安局对其处以行政拘留 8日的处罚。秦某认为自己是在行使言论自由权，遂诉至法院。法院认为，原告捏造、散布虚假事实的行为不属于言论自由，为法律所明文禁止，应承担法律责任。对此，下列哪一说法是正确的？（）[2017 年法考真题]",
+    "source-jurisprudence-025": "某高校司法研究中心的一项研究成果表明：处于大城市 “ 陌生人社会 ” 的人群会更多地强调程序公正，选择诉诸法律解决纠纷；处于乡村 “ 熟人社会 ” 的人群则会更看重实体公正，倾向以调解、和解等中国传统方式解决纠纷。据此，关于人们对 “ 公平正义 ” 的理解与接受方式，下列哪一说法是不准确的？（）[2011 年法考真题]",
+    "source-jurisprudence-030": "某省会城市的人大常委会根据相关法律制定了《城市桥梁隧道安全管理条例》。从我国法律渊源角度看，该规范性法律文件属于（）。[2021 年法硕（非法学）真题]",
+    "source-jurisprudence-034": "某人民法院在审理一起疑难案件时，参考了某法学家的学说后作出判决。对此，下列说法正确的有（）。[2020年法硕（法学、非法学）真题]",
+    "source-jurisprudence-039": "在法理学讨论课上，学生甲、乙、丙、丁分别表达了对法律权利和义务的看法，其中不正确的是（）。[2021 年法硕（非法学）真题]",
+    "source-jurisprudence-041": "甲工作时不慎将手指切断，同事将其送往医院。医院拟为其行断指再植术，手术前发现断指已丢失。对此，下列分析正确的是（）。[2016 年法硕（非法学）真题]",
+    "source-jurisprudence-042": "甲与乙签订租房合同，约定： “ 甲方应按时交房，否则向乙方支付月房租百分之二十的违约金。 ” 后双方因违约金发生争议而诉诸法院。对此，下列说法正确的有（）。[2020 年法硕（法学、非法学）真题]",
+    "source-jurisprudence-044": "下列选项中，关于法律行为或法律事件的判断，不正确的是（）。[2016 年法硕（法学）真题]",
+    "source-jurisprudence-047": "甲因琐事与乙发生冲突，将乙打伤。甲赶紧打 120 电话，并随救护车将乙送往医院，乙被诊断为轻伤，经及时救治痊愈出院。甲支付了乙的医疗费等费用。事后，甲未被追究法律责任。根据上述材料，甲被免责的原因是（）。[2017年法硕（非法学）真题]",
+    "source-jurisprudence-051": "甲乙两家公司签订买卖合同，因卖方甲拒不履行交货义务，乙将其告上法院。法官依据我国《合同法》中 “ 当事人一方不履行合同义务或者履行合同义务不符合约定的，应当承担继续履行、采取补救措施或者赔偿损失等违约责任 ” 的规定，判决甲继续履行合同。法官运用的法律推理是（）。[2020 年法硕（非法学）真题]",
+    "source-jurisprudence-052": "某法官在一份赡养纠纷案的判决书中，不仅援引了相关法律条文，还引用了中国古代《孝经》中的孝道原则进行说理。对此，下列说法不正确的是（）。[2020 年法硕（法学、非法学）真题]",
+    "source-jurisprudence-054": "某区人民法院在审理一起民事案件时，依据全国人大常委会副委员长关于民法总则草案的说明，对民法通则的有关条款作了解释。对此，下列说法不正确的有（）。[2019 年法硕（法学）真题]",
+    "source-jurisprudence-055": "一日名家代表人物公孙龙骑马进城。守城士兵说： “ 王法规定，马过城门应当纳税。 ” 公孙龙说： “ 马过城门应当纳税。但我骑的是白马，白马非马，不应当纳税。 ” 士兵说： “ 白马当然是马，你应当纳税。 ” 公孙龙反问道： “ 如果白马是马，那么，黑马也是马了？ ” 守城士兵说： “ 那是当然。 ” 公孙龙继续说道： “ 按照你的逻辑，白马是马，黑马也是马，那么，白马和黑马就没有差别了。因此，白马非马。 ” 守城士兵被公孙龙说得不知如何应对，但依然不为所动。最终，公孙龙为了进城，只得为马纳税。关于本案，下列说法正确的有（）。[2019 年法考真题]",
+    "source-jurisprudence-058": "关于我国社会主义法与执政党政策的关系，下列表述中正确的有（）。[2008 年法硕（非法学）真题]",
+    "source-jurisprudence-063": "随着科技的发展，手机移动支付逐渐普及，但由于相关法律尚不健全，导致实践中行业管理乱象和支付纠纷频现。对此，下列说法正确的是（）。[2018 年法硕（非法学）真题]",
+    "source-jurisprudence-066": "奥地利法学家埃利希在《法社会学原理》中指出： “ 在当代以及任何其他的时代，法的发展的重心既不在立法，也不在法学或司法判决，而在于社会本身。 ” 关于这句话涵义的阐释，下列哪一选项是错误的？（）[2009 年法考真题]",
+    "source-jurisprudence-070": "某国政府决定在实验室进行人体器官克隆研究，用于攻克某种疑难疾病。由于该国并无相关法律规定，该决定引发了社会各界广泛争论。对此，下列表述能够成立的有（）。[2012 年法硕（法学）真题]",
+    "source-jurisprudence-072": "在划分法律部门时不能频繁地变动法律部门的内容和结构，也不能只考虑法律规范的现状，需要具有一定的前瞻性。该观点体现的法律部门划分原则是（）。[2020 年法硕（法学、非法学）真题]",
+    "source-jurisprudence-073": "建设中国特色社会主义法治体系，必须坚持立法先行，发挥立法的引领和推动作用。关于完善立法体制，下列说法正确的有（）。[2018 年法考真题]",
+    "source-jurisprudence-075": "2007 年，某国政府批准在实验室培育人兽混合胚胎，以用于攻克帕金森病等疑难疾病的医学研究。该决定引发了社会各界的广泛关注和激烈争议。对此，下列哪些评论是正确的？（）[2009 年法考真题]",
+    "source-jurisprudence-079": "郑子产有疾。谓子大叔曰： “ 我死，子必为政。唯有德者能以宽服民，其次莫如猛。夫火烈，民望而畏之，故鲜死焉。水懦弱，民狎而玩之，则多死焉，故宽难。 ” 疾数月而卒。关于执法，下列看法正确的是（）。[2019 年法考真题]",
+    "source-jurisprudence-080": "某市试点开展 “ 外卖送餐员平安交通 ” 活动，向送餐人员发放《外卖小哥交通安全手册》。该手册规定：送餐人员因交通违章需要接受处理的，如存在 “ 赶时间送餐 ” 的实际情况，可于一周内自行选择时间 “ 弹性受罚 ”。该规定主要体现的执法原则是（）。[2021 年法硕（法学、非法学）真题]"
+  };
+  const explanationOverrides = {
+    "source-constitution-003": "B 项正确。1215 年《自由大宪章》是英国宪法的重要组成部分。成文宪法不一定只有一个书面文件，还可能包括宪法修正案或宪法性法律；1830 年法国宪法属于协定宪法；柔性宪法与刚性宪法是宪法分类，不能据此当然推导其效力高低。",
+    "source-constitution-030": "A、B、C 项体现权力制约：人大由民主选举产生并对人民负责，国家机关之间依法分工制约，地方人大及其常委会依法监督本级国家机关。D 项错误，我国法院不能直接对法律进行合宪性审查。",
+    "source-constitution-064": "B、D 项正确。宪法确认国家鼓励自学成才和社会力量依法办学，公民道德教育以培养有理想、有道德、有文化、有纪律的公民为目标。爱国统一战线不属于文化制度；文化制度也不能作为区分社会主义宪法和资本主义宪法的唯一标志。",
+    "source-constitution-114": "B 项正确。香港特别行政区法院对国防、外交等国家行为无管辖权；香港不设行政法院，终审法院行使终审权，法官选用还须结合基本法和专业资格条件。",
+    "source-constitution-119": "C 项正确。1799 年法国宪法最早确立由专门机关负责保障宪法实施的体制；1958 年法国宪法设立的宪法委员会是该体制的延续和发展。",
+    "source-jurisprudence-009": "A 项正确。该条直接约束行政执法，体现法的规范作用。B 项把规范作用与社会作用对立起来，错误；C 项将该原则性规定说成高度可操作、可预测，依据不足；D 项错误，本条没有完整规定假定条件、行为模式和法律后果。",
+    "source-jurisprudence-040": "C 项正确。婚姻登记以当事人意思表示为要素，属于法律行为。地震、战争和死亡通常不以当事人意志为转移，属于法律事件。",
+    "source-jurisprudence-043": "A、D 项正确。法人的权利能力和行为能力通常同时取得；我国境内的无国籍人也可以依法具有权利能力和行为能力。自然人权利能力始于出生，但行为能力还取决于年龄和智力、精神状况；外国人在我国并非只有行为能力而没有权利能力。",
+    "source-jurisprudence-092": "A、B、C、D 项均正确。四项分别涉及全民普法、青少年法治教育、谁执法谁普法和法治道德底蕴，均属于增强全民法治观念、推进法治社会建设的内容。"
+  };
+
+  if (!Array.isArray(window.SOURCE_LAW_QUESTIONS)) return;
+  window.SOURCE_LAW_QUESTIONS.forEach((question) => {
+    if (promptOverrides[question.id]) question.prompt = promptOverrides[question.id];
+    if (explanationOverrides[question.id]) question.explanation = explanationOverrides[question.id];
+  });
+})();
+
+  </script>
+  <script>
+(function () {
+  "use strict";
+
+  const out = [];
+  let counter = 0;
+
+  function add(course, topicId, type, prompt, answer, extra) {
+    const item = extra || {};
+    out.push({
+      id: `sd-${course}-${String(++counter).padStart(3, "0")}`,
+      course,
+      sourceGroup: item.sourceGroup || "山东题源",
+      topicId,
+      type,
+      modes: item.modes || ["daily", "postgrad", "bar"],
+      difficulty: item.difficulty || 2,
+      prompt,
+      options: item.options,
+      answer,
+      explanation: item.explanation,
+      sampleAnswer: item.sampleAnswer || (typeof answer === "string" ? answer : ""),
+      rubric: item.rubric || [],
+      source: item.source
+    });
+  }
+
+  // 宪法学：山东高校真题考点。选择题为依据公开真题考点重新组织的训练题，
+  // 主观题保留资料中可核对的原题表述。
+  add("constitution", "con-01", "single",
+    "刚性宪法与柔性宪法的主要划分标准是：",
+    0,
+    {
+      options: ["制定、修改程序以及宪法的效力", "宪法是否具有书面形式", "国家结构形式是单一制还是联邦制", "宪法是否规定公民基本权利"],
+      explanation: "刚性宪法与柔性宪法主要看制定、修改程序是否严于普通法律，以及宪法的效力位阶。英国宪法常被视为柔性宪法的典型。",
+      source: "山东题源改编：山东大学 2017 年研考“刚性宪法与柔性宪法”考点"
+    });
+  add("constitution", "con-01", "multiple",
+    "关于成文宪法与不成文宪法，下列说法正确的有：",
+    [0, 2, 3],
+    {
+      options: ["成文宪法通常存在统一或系统化的宪法典", "不成文宪法意味着该国没有宪法规范", "不成文宪法可能由宪法性法律、惯例和判例等构成", "成文宪法国家也可能存在宪法惯例"],
+      explanation: "成文与不成文的区别在于是否存在统一、系统的宪法典，不等于有没有宪法规范。英国是不成文宪法的典型。",
+      source: "山东题源改编：山东大学 2017 年研考宪法分类考点"
+    });
+  add("constitution", "con-04", "single",
+    "我国的国家结构形式是：",
+    1,
+    {
+      options: ["联邦制", "单一制", "邦联制", "复合制"],
+      explanation: "我国是统一的多民族国家，实行单一制；民族区域自治和特别行政区制度都不改变单一制国家结构。",
+      source: "山东题源改编：山东大学 2015 年研考“单一制”考点"
+    });
+  add("constitution", "con-05", "multiple",
+    "人民代表大会制度的基本内容包括：",
+    [0, 1, 2],
+    {
+      options: ["国家的一切权力属于人民", "人大代表由民主选举产生，对人民负责、受人民监督", "国家行政机关、监察机关、审判机关、检察机关由人大产生，对它负责、受它监督", "国家权力实行立法、行政、司法三权分立"],
+      explanation: "人民代表大会制度实行民主集中制，不实行三权分立。前三项体现人民主权、选举监督和国家机关之间的关系。",
+      source: "山东题源改编：青岛大学 2015 年研考“人民代表大会制度基本内容”考点"
+    });
+  add("constitution", "con-05", "single",
+    "关于民族区域自治，下列说法正确的是：",
+    2,
+    {
+      options: ["民族自治地方可以脱离中央统一领导", "民族区域自治就是民族自决", "自治机关依法行使自治权", "自治地方可以制定与宪法相抵触的自治条例"],
+      explanation: "民族区域自治是在国家统一领导下，在少数民族聚居地方设立自治机关、依法行使自治权，不是民族自决或联邦制。",
+      source: "山东题源改编：山东大学 2011 年研考民族自治地方考点"
+    });
+  add("constitution", "con-05", "truefalse",
+    "判断：民族区域自治以国家统一为前提，自治机关必须在宪法和法律规定的权限内行使自治权。",
+    true,
+    {
+      explanation: "正确。民族区域自治不是脱离国家的自治，自治权来源于宪法和法律的授予。",
+      source: "山东题源改编：山东大学 2011 年研考民族区域自治考点"
+    });
+  add("constitution", "con-06", "multiple",
+    "分析限制公民基本权利是否正当，通常应审查：",
+    [0, 1, 2, 3],
+    {
+      options: ["是否有明确的法律依据", "限制目的是否正当", "手段与目的是否具有必要性和比例性", "是否保留权利的核心内容并提供救济"],
+      explanation: "法律保留、正当目的、比例原则、核心内容保障和救济机制，构成审查基本权利限制的常用框架。",
+      source: "山东题源改编：山东大学 2010 年研考基本权利保障及界限考点"
+    });
+  add("constitution", "con-06", "single",
+    "平等权中的“合理差别”是指：",
+    1,
+    {
+      options: ["对所有差异都不作法律评价", "差别对待具有正当目的，并与该目的具有实质关联且符合比例", "只要立法者认为合理就可以任意区别对待", "为了结果平均而取消一切资格条件"],
+      explanation: "平等并不排斥合理差别。关键是差别标准、目的正当性、实质关联和手段比例。",
+      source: "山东题源改编：山东大学 2008 年研考“平等权合理差别”考点"
+    });
+  add("constitution", "con-06", "truefalse",
+    "判断：平等权只约束行政机关，不约束立法机关和司法机关。",
+    false,
+    {
+      explanation: "错误。平等权是宪法基本权利，约束包括立法、行政、司法在内的国家权力。",
+      source: "山东题源改编：山东大学 2008 年研考平等权考点"
+    });
+  add("constitution", "con-07", "multiple",
+    "根据宪法和法律，可以向全国人民代表大会提出议案的主体包括：",
+    [0, 1, 2, 3],
+    {
+      options: ["全国人大主席团", "全国人大常委会", "国务院", "全国人大各专门委员会"],
+      explanation: "全国人大主席团、全国人大常委会、国务院、中央军委、最高人民法院、最高人民检察院和全国人大各专门委员会，都可以依法提出属于全国人大职权范围内的议案。",
+      source: "山东题源改编：山东大学 2008 年研考全国人大议案提出主体考点"
+    });
+  add("constitution", "con-07", "single",
+    "关于中央军事委员会主席负责制，下列理解正确的是：",
+    2,
+    {
+      options: ["中央军委实行委员会集体负责制，主席只主持会议", "中央军委主席由全国人大常委会选举产生", "中央军委主席对全国人大和全国人大常委会负责", "中央军委主席可以不受宪法约束"],
+      explanation: "中央军委实行主席负责制。军委主席由全国人大选举，对全国人大及其常委会负责。",
+      source: "山东题源改编：山东大学 2010 年研考中央军委主席负责制考点"
+    });
+  add("constitution", "con-08", "multiple",
+    "当代违宪审查制度的主要模式包括：",
+    [0, 1, 2],
+    {
+      options: ["普通法院审查模式", "立法机关审查模式", "专门机关审查模式", "所有国家统一采用司法审查模式"],
+      explanation: "违宪审查没有唯一模式，普通法院、立法机关和专门机关审查都是常见类型。",
+      source: "山东题源改编：山东大学 2016 年研考“当代违宪审查制度基本模式”考点"
+    });
+  add("constitution", "con-01", "definition",
+    "名词解释：刚性宪法。",
+    "刚性宪法是制定和修改程序严于普通法律、具有较高稳定性和效力位阶的宪法。判断时重点看修宪机关、修宪程序和通过比例。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "修改程序更严格", points: 3 }, { label: "效力与稳定性", points: 2 }],
+      source: "山东真题：山东大学 2017 年研究生入学考试“刚性宪法和柔性宪法”"
+    });
+  add("constitution", "con-01", "definition",
+    "名词解释：协定宪法。",
+    "协定宪法是由君主与国民或国民代表机关协商制定的宪法。1830 年法国宪法是常用例证，应与钦定宪法、民定宪法相区分。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "制定主体", points: 2 }, { label: "协商制定", points: 2 }, { label: "例证", points: 1 }],
+      source: "山东真题：山东大学 2015 年研究生入学考试“民定宪法、协定宪法”"
+    });
+  add("constitution", "con-03", "definition",
+    "名词解释：分权制衡。",
+    "分权制衡是把国家权力分配到不同机关，并使各机关在职权上相互配合、相互制约的原则。我国实行民主集中制，不照搬三权分立。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "分权", points: 2 }, { label: "制衡", points: 2 }, { label: "中国语境", points: 1 }],
+      source: "山东真题：山东大学 2017 年研究生入学考试“分权制衡”"
+    });
+  add("constitution", "con-04", "short",
+    "简答：我国行政区划变更的基本法律程序。",
+    "省、自治区、直辖市的设立、撤销、更名，特别行政区的设立及制度，由全国人大决定；省、自治区、直辖市的区域界线变更，自治州、县、自治县、市的设立、撤销、更名和界线变更，由国务院审批；乡、民族乡、镇的设立、撤销、更名和界线变更，由省级政府审批。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "全国人大权限", points: 2 }, { label: "国务院权限", points: 3 }, { label: "省级政府权限", points: 2 }],
+      source: "山东真题：山东大学 2008 年研究生入学考试行政区划变更程序"
+    });
+  add("constitution", "con-05", "short",
+    "简答：选举制度的基本功能。",
+    "选举制度为人民行使国家权力提供组织程序，产生国家机关并赋予其正当性；它连接国家权力与公民意志，保障人民监督代表和国家机关，并促进政治参与和公共责任。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "权力正当性", points: 2 }, { label: "国家机关产生", points: 2 }, { label: "参与和监督", points: 2 }],
+      source: "山东真题：山东大学 2011 年研究生入学考试“选举制度的基本功能”"
+    });
+  add("constitution", "con-05", "essay",
+    "论述：我国选举制度的基本原则及其制度意义。",
+    "可从选举权的普遍性、平等性、直接选举与间接选举并用、无记名投票等方面展开；进一步说明这些原则如何保障人民当家作主、提高代表机关的代表性，并通过选举监督把国家权力置于人民意志之下。答题时注意区分原则与具体程序。",
+    {
+      modes: ["postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 3,
+      rubric: [{ label: "四项原则", points: 4 }, { label: "规范依据", points: 2 }, { label: "制度意义", points: 3 }, { label: "论证结构", points: 1 }],
+      source: "山东真题：山东大学 2017 年研究生入学考试“我国选举法的基本原则”"
+    });
+  add("constitution", "con-05", "short",
+    "简答：我国民族自治地方的类型。",
+    "我国民族自治地方分为自治区、自治州、自治县三级。民族乡不是民族自治地方，但属于民族区域自治制度的补充形式。自治地方设立自治机关，依法行使自治权。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "三级自治地方", points: 3 }, { label: "民族乡定位", points: 1 }, { label: "自治机关", points: 2 }],
+      source: "山东真题：山东大学 2011 年研究生入学考试民族自治地方类型"
+    });
+  add("constitution", "con-05", "essay",
+    "论述：我国人民代表大会制度的基本内容。",
+    "从国家一切权力属于人民、人大代表由民主选举产生并受人民监督、国家行政机关和监察机关及审判检察机关由人大产生并对它负责、民主集中制等方面展开。最后说明人大制度与党的领导、人民当家作主、依法治国有机统一的关系。",
+    {
+      modes: ["postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 3,
+      rubric: [{ label: "权力归属", points: 2 }, { label: "选举与监督", points: 2 }, { label: "国家机关关系", points: 3 }, { label: "民主集中制", points: 2 }, { label: "有机统一", points: 1 }],
+      source: "山东真题：青岛大学 2015 年研究生入学考试“人民代表大会制基本内容”"
+    });
+  add("constitution", "con-06", "short",
+    "简答：我国言论、出版自由的保障与限制。",
+    "宪法确认公民享有言论、出版自由，国家应提供表达渠道和制度保障；同时，权利的行使不得危害国家安全、公共利益和他人合法权益。限制应有法律依据、目的正当并符合比例原则。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "宪法确认", points: 2 }, { label: "保障方式", points: 2 }, { label: "限制边界", points: 3 }],
+      source: "山东真题：山东大学 2010 年研考“言论自由和出版自由”"
+    });
+  add("constitution", "con-06", "definition",
+    "名词解释：宗教信仰自由。",
+    "宗教信仰自由是公民依法享有信仰或不信仰宗教、选择宗教和参加正常宗教活动的自由。国家保护正常宗教活动，但宗教活动不得破坏社会秩序、损害公民身体健康或妨碍国家教育制度。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "信与不信", points: 2 }, { label: "活动自由", points: 2 }, { label: "法律边界", points: 2 }],
+      source: "山东真题：山东大学 2016 年研究生入学考试“宗教信仰自由”"
+    });
+  add("constitution", "con-06", "short",
+    "简答：宪法对公民基本权利的保障及界限。",
+    "保障包括宪法确认、国家保护义务、制度与程序保障、救济机制和权利限制的合宪性审查；界限包括不得侵犯他人权利、不得危害公共利益和国家利益，限制须有法律依据并符合正当目的和比例原则。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "国家保护义务", points: 2 }, { label: "制度与救济", points: 2 }, { label: "限制条件", points: 3 }],
+      source: "山东真题：山东大学 2010 年研考公民基本权利和自由的保障与界限"
+    });
+  add("constitution", "con-06", "short",
+    "简答：平等权中合理差别的常见类型。",
+    "可从自然差异、能力与资格差异、社会角色差异、扶助弱势群体和公共利益需要等方面说明。判断重点不在差异本身，而在目的是否正当、差异与目的是否具有实质关联、手段是否必要且合乎比例。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "差别类型", points: 3 }, { label: "审查标准", points: 3 }, { label: "结论", points: 1 }],
+      source: "山东真题：山东大学 2008 年研考“平等权中的合理差别”"
+    });
+  add("constitution", "con-06", "short",
+    "简答：我国宪法对人身自由的保护。",
+    "公民人身自由不受侵犯；非经人民检察院批准或决定、人民法院决定，并由公安机关执行，不受逮捕；禁止非法拘禁和以其他方法非法剥夺或限制人身自由，禁止非法搜查公民身体；人格尊严、住宅和通信秘密也受到宪法保护。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "逮捕程序", points: 3 }, { label: "禁止非法拘禁", points: 2 }, { label: "相关权利", points: 2 }],
+      source: "山东真题：山东大学 2011 年研考人身自由的宪法保护"
+    });
+
+  // 法理学：山东高校真题考点。
+  add("jurisprudence", "jur-01", "single",
+    "关于法律规则与法律原则的区别，下列说法正确的是：",
+    1,
+    {
+      options: ["法律原则比法律规则更具体明确", "法律规则通常具有较具体的假定条件、行为模式和法律后果", "法律原则只能用于立法，不能用于裁判说理", "法律规则与法律原则在适用方式上完全相同"],
+      explanation: "规则更具体，通常以“全有或全无”的方式适用；原则更抽象，可在不同程度上被满足，并通过权衡和论证适用。",
+      source: "山东题源改编：山东大学 2018 年研考法律规则特点考点"
+    });
+  add("jurisprudence", "jur-04", "single",
+    "关于法的溯及力，下列说法正确的是：",
+    1,
+    {
+      options: ["新法当然适用于生效前的全部行为", "法一般不溯及既往，但有利于当事人的特别规定可以例外", "法是否溯及既往完全由行政机关决定", "刑法领域绝对不存在从旧兼从轻规则"],
+      explanation: "法不溯及既往是法治原则，旨在保护可预测性和信赖利益；刑法中的从旧兼从轻是重要例外。",
+      source: "山东题源改编：山东师大 2018 年、山东科大 2018 年研考“法的溯及力”考点"
+    });
+  add("jurisprudence", "jur-04", "multiple",
+    "解决法的效力冲突通常适用哪些规则？",
+    [0, 1, 2],
+    {
+      options: ["上位法优于下位法", "特别法优于一般法", "新法优于旧法", "任何地方性法规都优先于法律"],
+      explanation: "效力冲突先看制定机关和效力位阶，再结合特别法、新法等规则；不能把地方性法规置于法律之上。",
+      source: "山东题源改编：山东师大 2018 年研考法的效力考点"
+    });
+  add("jurisprudence", "jur-05", "single",
+    "下列哪一项属于法律事实中的法律事件？",
+    0,
+    {
+      options: ["地震导致保险理赔关系发生", "双方签订买卖合同", "依法进行婚姻登记", "公司作出解除合同的通知"],
+      explanation: "法律事件不以当事人意志为转移；签订合同、婚姻登记和发出解除通知通常属于法律行为。",
+      source: "山东题源改编：山东科大 2018 年研考法律关系与法律事实考点"
+    });
+  add("jurisprudence", "jur-05", "multiple",
+    "法律关系的构成要素包括：",
+    [0, 1, 2],
+    {
+      options: ["法律关系主体", "法律关系客体", "法律权利和法律义务", "法律条文的数量"],
+      explanation: "法律关系由主体、客体和内容构成，内容即法律权利和法律义务。",
+      source: "山东题源改编：山东科大 2018 年研考法律关系构成考点"
+    });
+  add("jurisprudence", "jur-05", "truefalse",
+    "判断：自然人的权利能力始于出生，行为能力则还要结合年龄和智力、精神状况判断。",
+    true,
+    {
+      explanation: "正确。权利能力与行为能力不是同一概念，有权利能力不等于当然具有完全行为能力。",
+      source: "山东题源改编：山东大学 2008 年研考权利能力与行为能力考点"
+    });
+  add("jurisprudence", "jur-07", "multiple",
+    "分析法律责任构成时，通常需要考察：",
+    [0, 1, 2, 3],
+    {
+      options: ["责任主体", "违法行为或法定归责事由", "损害结果及因果关系", "过错或法律规定的其他归责要素"],
+      explanation: "责任构成要结合责任类型判断。过错责任强调过错，无过错责任则由法律规定，不宜机械套用同一要件。",
+      source: "山东题源改编：山东大学 2016 年、山东师大 2017 年研考法律责任构成考点"
+    });
+  add("jurisprudence", "jur-07", "single",
+    "关于过错责任原则，下列表述正确的是：",
+    2,
+    {
+      options: ["只要造成损害就一律承担责任", "过错永远不是责任构成要素", "行为人因过错造成他人损害时，依法承担相应责任", "过错责任只适用于刑事责任"],
+      explanation: "过错责任以过错为归责基础；无过错责任必须有法律明确规定，不能与过错责任混同。",
+      source: "山东题源改编：山东师大 2015 年研考过错责任原则考点"
+    });
+  add("jurisprudence", "jur-07", "truefalse",
+    "判断：免责就是法律责任自始不成立。",
+    false,
+    {
+      explanation: "错误。免责以责任已经成立为前提，因法定或约定事由而免除或减轻责任；无责任则是责任构成不成立。",
+      source: "山东题源改编：山东师大 2017 年研考免责条件考点"
+    });
+  add("jurisprudence", "jur-08", "single",
+    "法官先解释法律条文的通常含义，再结合条文在整部法律中的位置确定其意义，主要运用了：",
+    1,
+    {
+      options: ["单纯历史解释", "文义解释和体系解释", "比较解释和目的解释", "法律漏洞填补"],
+      explanation: "先看词语通常含义属于文义解释，再结合整部法律的结构和位置属于体系解释。",
+      source: "山东题源改编：山东大学 2011 年研考法律方法考点"
+    });
+  add("jurisprudence", "jur-14", "multiple",
+    "关于法治的基本理念，下列说法正确的有：",
+    [0, 1, 2],
+    {
+      options: ["法律具有至上性和普遍约束力", "公权力应依法行使并受到监督", "公民权利应获得制度保障和救济", "法治就是制定尽可能多的法律"],
+      explanation: "法治强调法律至上、权力约束和权利保障，不等于法律数量越多越好。",
+      source: "山东题源改编：山东大学 2010 年研考“法治的基本理念”考点"
+    });
+  add("jurisprudence", "jur-02", "truefalse",
+    "判断：普通法系以判例法为主要法律渊源，法官对法律发展具有重要作用。",
+    true,
+    {
+      explanation: "正确。普通法系具有判例法传统，法官通过裁判和先例规则参与法律发展；现代普通法系也大量使用制定法。",
+      source: "山东题源改编：山东大学 2015 年研考普通法系特点考点"
+    });
+  add("jurisprudence", "jur-15", "single",
+    "关于法律与道德的关系，下列表述正确的是：",
+    2,
+    {
+      options: ["法律与道德完全没有联系", "凡是违反道德的行为都必须承担法律责任", "法律与道德在内容、功能上相互联系，但调整范围和实施方式不同", "道德可以取代法律成为国家强制执行的依据"],
+      explanation: "法律与道德相互影响，但不能等同。法律由国家强制力保障实施，道德主要依靠社会舆论和内心信念。",
+      source: "山东题源改编：山东师大 2016 年研考法律与道德关系考点"
+    });
+  add("jurisprudence", "jur-01", "short",
+    "简答：法理学的概念及研究范围。",
+    "法理学研究法的一般理论、法的产生与发展、法的本质和特征、法的价值、法的创制与实施等基本问题，并从总体上阐释法和法律现象的一般规律。它与部门法学是一般与特殊的关系。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "一般理论", points: 2 }, { label: "研究范围", points: 3 }, { label: "与部门法关系", points: 1 }],
+      source: "山东真题：山东大学 2017 年研考“法理学的概念及范围”"
+    });
+  add("jurisprudence", "jur-04", "short",
+    "简答：法的效力与法的实效的区别和联系。",
+    "法的效力是规范本身的约束力和适用资格，解决“应不应当适用”；法的实效是规范在现实中实际被遵守、执行和实现的效果，解决“实际上有没有起作用”。有效力不等于有实效，有实效也不当然证明规范具有正当效力，但二者相互影响。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "效力概念", points: 2 }, { label: "实效概念", points: 2 }, { label: "区别与联系", points: 3 }],
+      source: "山东真题：山东师大 2018 年研考“法的效力与法的实效”"
+    });
+  add("jurisprudence", "jur-04", "definition",
+    "名词解释：法的溯及力。",
+    "法的溯及力是新法能否适用于其生效以前发生的行为和事件的问题。现代法治原则上坚持法不溯及既往，以保护行为预期和信赖利益；刑法中的从旧兼从轻是重要例外。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "概念", points: 2 }, { label: "原则", points: 2 }, { label: "例外", points: 1 }],
+      source: "山东真题：山东师大 2018 年、山东科大 2018 年研考“法的溯及力”"
+    });
+  add("jurisprudence", "jur-01", "short",
+    "简答：法的构成要素。",
+    "法的构成要素通常包括法律规则、法律原则和法律概念。法律规则规定具体行为模式和法律后果；法律原则提供基础性、指导性原理；法律概念界定法律思维和适用的基本范畴。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "三类要素", points: 4 }, { label: "各自功能", points: 2 }],
+      source: "山东真题：山东大学 2011 年研考“法的构成要素”"
+    });
+  add("jurisprudence", "jur-01", "short",
+    "简答：与法律原则相比，法律规则有哪些特点？",
+    "法律规则更具体明确，通常具有假定条件、行为模式和法律后果的逻辑结构；适用上具有较高确定性和可预测性，常以“全有或全无”的方式适用；但规则也可能存在例外和漏洞。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "具体明确", points: 2 }, { label: "逻辑结构", points: 2 }, { label: "适用特点", points: 2 }],
+      source: "山东真题：山东大学 2018 年研考“与法律原则相比，法律规则的特点”"
+    });
+  add("jurisprudence", "jur-05", "short",
+    "简答：法律关系的构成要素。",
+    "法律关系由主体、客体和内容构成。主体是依法享有权利、承担义务的参加者；客体是权利义务所指向的对象；内容是主体之间的法律权利和法律义务。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 1,
+      rubric: [{ label: "主体", points: 2 }, { label: "客体", points: 2 }, { label: "内容", points: 2 }],
+      source: "山东真题：山东科大 2018 年研考法律关系内涵与构成"
+    });
+  add("jurisprudence", "jur-05", "short",
+    "简答：公民权利能力与行为能力的关系。",
+    "权利能力是依法享有权利、承担义务的资格；行为能力是依法以自己的行为取得权利、承担义务的能力。自然人的权利能力一般始于出生、终于死亡，行为能力还要结合年龄和智力、精神状况判断。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "权利能力", points: 2 }, { label: "行为能力", points: 2 }, { label: "联系与区别", points: 2 }],
+      source: "山东真题：山东大学 2008 年研考“公民的权利能力”"
+    });
+  add("jurisprudence", "jur-05", "short",
+    "简答：法律关系产生、变更和消灭的条件。",
+    "法律关系以法律规范为前提，以法律关系主体、客体和权利义务为结构基础，并由法律事实引起产生、变更或消灭。法律事实包括法律事件和法律行为。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "法律规范", points: 2 }, { label: "法律事实", points: 2 }, { label: "事件与行为", points: 2 }],
+      source: "山东真题：山东大学 2010 年研考法律关系形成、变更、消灭的条件"
+    });
+  add("jurisprudence", "jur-07", "short",
+    "简答：法律责任的一般构成要件。",
+    "通常包括责任主体、违法行为或法定归责事由、损害结果、因果关系以及过错等归责要素。不同责任类型要件不同，无过错责任和公平责任不能机械套用过错要件。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "主体与行为", points: 2 }, { label: "损害与因果", points: 2 }, { label: "归责要素", points: 2 }],
+      source: "山东真题：山东大学 2016 年、山东师大 2017 年研考法律责任构成"
+    });
+  add("jurisprudence", "jur-07", "short",
+    "简答：免责的条件和方式。",
+    "免责以责任成立为前提，可因时效届满、当事人有效协议、自首立功、履行不能、受害人过错、不可抗力等法定或约定事由而免除或减轻。答题时应先判断责任是否成立，再讨论免责。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "免责前提", points: 2 }, { label: "法定事由", points: 3 }, { label: "区分无责任", points: 1 }],
+      source: "山东真题：山东师大 2017 年研考“免责的条件和方式”"
+    });
+  add("jurisprudence", "jur-12", "short",
+    "简答：立法的概念和特征。",
+    "立法是有权的国家机关依照法定权限和程序，制定、修改、废止法律规范的活动。其特征包括主体的法定性、职权的特定性、程序的法定性、结果的规范性以及活动的权威性。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "概念", points: 2 }, { label: "主体与权限", points: 2 }, { label: "程序与结果", points: 2 }],
+      source: "山东真题：山东大学 2014 年研考“立法的概念和特征”"
+    });
+  add("jurisprudence", "jur-13", "short",
+    "简答：司法的概念及主要特征。",
+    "司法是国家司法机关依照法定职权和程序，适用法律处理案件的专门活动。主要特征包括主体特定、职权法定、程序严格、被动性与中立性、裁判具有权威性和终局性。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "概念", points: 2 }, { label: "主体与职权", points: 2 }, { label: "程序与裁判", points: 2 }],
+      source: "山东真题：山东大学 2011 年研考“司法的概念及主要特征”"
+    });
+  add("jurisprudence", "jur-08", "short",
+    "简答：法律方法的概念与特征。",
+    "法律方法是法律职业者认识和适用法律、处理法律问题的专门方法，包括法律解释、法律推理、法律论证和漏洞填补等。其特征是规范性、说理性、专业性和可检验性。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "概念", points: 2 }, { label: "主要类型", points: 2 }, { label: "特征", points: 2 }],
+      source: "山东真题：山东大学研考“法律方法的概念与特征”考点"
+    });
+  add("jurisprudence", "jur-04", "short",
+    "简答：法的效力范围。",
+    "法的效力范围包括对人效力、对事效力、时间效力和空间效力。不同部门法和具体规范可能采用属人、属地、保护等不同原则，时间效力还涉及生效、失效和溯及力。",
+    {
+      modes: ["daily", "postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 2,
+      rubric: [{ label: "四个维度", points: 4 }, { label: "适用原则", points: 2 }],
+      source: "山东真题：山东大学 2010 年研考“法的效力和范围”"
+    });
+  add("jurisprudence", "jur-01", "essay",
+    "论述：法律权利与法律义务的关系。",
+    "可从结构上的关联性、功能上的互补性、数量上的总体对应性和价值上的统一性展开，说明没有无义务的权利，也没有无权利的义务。进一步结合权利保障、义务履行和法治秩序，避免把二者简单对立。",
+    {
+      modes: ["postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 3,
+      rubric: [{ label: "结构关联", points: 3 }, { label: "功能互补", points: 3 }, { label: "价值统一", points: 2 }, { label: "论证与实例", points: 2 }],
+      source: "山东真题：山东师大 2017 年、山东大学 2016 年研考权利和义务关系"
+    });
+  add("jurisprudence", "jur-02", "essay",
+    "论述：资本主义国家两大法系的主要区别。",
+    "从法律渊源、法典化程度、法官作用、法律思维和诉讼传统比较大陆法系与普通法系；同时说明两大法系正在相互借鉴，差异不能绝对化。可结合判例、制定法和司法制度举例。",
+    {
+      modes: ["postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 3,
+      rubric: [{ label: "渊源与法典", points: 3 }, { label: "法官与思维", points: 3 }, { label: "诉讼传统", points: 2 }, { label: "融合趋势", points: 2 }],
+      source: "山东真题：山东大学 2011 年研考“资本主义国家两大法系”"
+    });
+  add("jurisprudence", "jur-03", "essay",
+    "论述：法律与道德的联系和区别。",
+    "联系可从内容相互吸收、功能相互支持、实施相互影响展开；区别可从产生方式、表现形式、调整范围、实施力量和制裁方式展开。结论应说明法治与德治相结合，但不能以道德判断代替法律适用。",
+    {
+      modes: ["postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 3,
+      rubric: [{ label: "联系", points: 3 }, { label: "区别", points: 4 }, { label: "法治与德治", points: 2 }, { label: "结论", points: 1 }],
+      source: "山东真题：山东师大 2016 年研考法律与道德的联系和区别"
+    });
+  add("jurisprudence", "jur-14", "essay",
+    "论述：法治的基本理念。",
+    "可从法律至上、良法之治、权力约束、权利保障、程序正义和可预期性展开。进一步说明法治不仅是制度安排，也是国家治理方式和公共生活方式；不能把法治简化为“多立法”。",
+    {
+      modes: ["postgrad"],
+      sourceGroup: "山东真题",
+      difficulty: 3,
+      rubric: [{ label: "法律至上", points: 2 }, { label: "权力与权利", points: 3 }, { label: "程序与可预期", points: 2 }, { label: "治理意义", points: 2 }, { label: "论证", points: 1 }],
+      source: "山东真题：山东大学 2010 年研考“法治的基本理念”"
+    });
+
+  window.EXTRA_SHANDONG_QUESTIONS = out;
+})();
+
+  </script>
+  <script>
+(function () {
+  "use strict";
+
   const out = [];
   let counter = 0;
 
@@ -12943,6 +13562,77 @@ window.SOURCE_LAW_QUESTIONS = [
 (function () {
   "use strict";
 
+  const sourcePriority = {
+    "山东真题": 0,
+    "山东题源": 1,
+    "资料原题": 2,
+    "核心题": 3,
+    "章节专题": 4,
+    "章节训练": 5,
+    "章节变式": 6,
+    "重点精练": 7,
+    "网络题型": 8
+  };
+
+  function normalizePrompt(value) {
+    return String(value || "")
+      .replace(/^\s*\d{1,3}(?:[.、．]\s*|\s+)/, "")
+      .replace(/[“”"'‘’「」『』（）()【】\[\]，。；：！？、,.!?;:\s]/g, "")
+      .toLowerCase();
+  }
+
+  function priority(question) {
+    return sourcePriority[question.sourceGroup || "核心题"] ?? 20;
+  }
+
+  window.lawSourcePriority = function (question) {
+    return priority(question || {});
+  };
+
+  window.finalizeLawQuestionBank = function (questions, targetSize = 2000) {
+    const groups = new Map();
+    questions.forEach((question) => {
+      const key = `${question.course}|${question.type}|${normalizePrompt(question.prompt)}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(question);
+    });
+
+    const removable = [];
+    groups.forEach((items) => {
+      if (items.length < 2) return;
+      const sorted = items.slice().sort((a, b) => priority(a) - priority(b));
+      sorted.slice(1).forEach((question) => {
+        if (priority(question) >= 5) removable.push(question);
+      });
+    });
+
+    const removeCount = Math.max(0, questions.length - targetSize, 0);
+    const removed = removable
+      .sort((a, b) => priority(b) - priority(a))
+      .slice(0, removeCount);
+    const removedIds = new Set(removed.map((question) => question.id));
+
+    for (let index = questions.length - 1; index >= 0; index -= 1) {
+      if (removedIds.has(questions[index].id)) questions.splice(index, 1);
+    }
+
+    window.__LAW_QUESTION_BANK_AUDIT__ = {
+      total: questions.length,
+      targetSize,
+      removedDuplicates: removed.length,
+      shandong: questions.filter((question) => String(question.sourceGroup || "").startsWith("山东")).length,
+      incompletePrompts: questions.filter((question) => String(question.prompt || "").trim().length < 8).length
+    };
+
+    return window.__LAW_QUESTION_BANK_AUDIT__;
+  };
+})();
+
+  </script>
+  <script>
+(function () {
+  "use strict";
+
   const DATA = window.LAW_DATA;
   const { courses, modes, types, cards, questions, sources, examPatterns, knowledgeUnits = [] } = DATA;
   if (Array.isArray(window.EXTRA_LAW_QUESTIONS)) {
@@ -12957,11 +13647,17 @@ window.SOURCE_LAW_QUESTIONS = [
   if (Array.isArray(window.SOURCE_LAW_QUESTIONS)) {
     questions.push(...window.SOURCE_LAW_QUESTIONS);
   }
+  if (Array.isArray(window.EXTRA_SHANDONG_QUESTIONS)) {
+    questions.push(...window.EXTRA_SHANDONG_QUESTIONS);
+  }
   if (Array.isArray(window.WEB_LAW_QUESTIONS)) {
     questions.push(...window.WEB_LAW_QUESTIONS);
   }
   if (Array.isArray(window.EXTRA_QUALITY_QUESTIONS)) {
     questions.push(...window.EXTRA_QUALITY_QUESTIONS);
+  }
+  if (typeof window.finalizeLawQuestionBank === "function") {
+    window.finalizeLawQuestionBank(questions, 2000);
   }
   Object.values(courses).forEach((course) => {
     course.topics.forEach((topic) => {
@@ -13333,6 +14029,8 @@ window.SOURCE_LAW_QUESTIONS = [
 
   function sourceShortLabel(question) {
     return {
+      "山东真题": "山东真题",
+      "山东题源": "山东",
       "资料原题": "资料",
       "核心题": "核心",
       "章节专题": "专题",
@@ -14060,8 +14758,9 @@ window.SOURCE_LAW_QUESTIONS = [
       if (filters.type !== "all" && question.type !== filters.type) return false;
       if (filters.topic !== "all" && question.topicId !== filters.topic) return false;
       const sourceGroup = question.sourceGroup || "核心题";
-      if (filters.source === "source" && sourceGroup !== "资料原题") return false;
-      if (filters.source === "training" && sourceGroup === "资料原题") return false;
+      if (filters.source === "source" && !["资料原题", "山东真题", "山东题源"].includes(sourceGroup)) return false;
+      if (filters.source === "shandong" && !sourceGroup.startsWith("山东")) return false;
+      if (filters.source === "training" && ["资料原题", "山东真题", "山东题源"].includes(sourceGroup)) return false;
       const status = questionStatus(question.id);
       if (filters.status === "wrong" && status !== "wrong") return false;
       if (filters.status === "mastered" && status !== "mastered") return false;
@@ -14091,7 +14790,7 @@ window.SOURCE_LAW_QUESTIONS = [
       }
       return true;
     });
-    const sourceRank = { "资料原题": 0, "核心题": 1, "章节专题": 2, "章节训练": 3, "章节变式": 4, "重点精练": 5, "网络题型": 6 };
+    const sourceRank = { "山东真题": 0, "山东题源": 1, "资料原题": 2, "核心题": 3, "章节专题": 4, "章节训练": 5, "章节变式": 6, "重点精练": 7, "网络题型": 8 };
     return filtered.sort((a, b) => {
       const rank = (sourceRank[a.sourceGroup || "核心题"] ?? 9) - (sourceRank[b.sourceGroup || "核心题"] ?? 9);
       return rank || String(a.id).localeCompare(String(b.id));
@@ -14169,7 +14868,7 @@ window.SOURCE_LAW_QUESTIONS = [
       : state.activeMode === "bar"
         ? [[["single"], 10], [["multiple"], 4], [["truefalse"], 2], [["case", "material"], 4]]
         : [[["single"], 10], [["multiple"], 3], [["truefalse"], 1], [["short", "definition"], 3], [["case", "material"], 3]];
-    const sourceRank = { "资料原题": 0, "核心题": 1, "章节专题": 2, "章节训练": 3, "章节变式": 4, "重点精练": 5, "网络题型": 6 };
+    const sourceRank = { "山东真题": 0, "山东题源": 1, "资料原题": 2, "核心题": 3, "章节专题": 4, "章节训练": 5, "章节变式": 6, "重点精练": 7, "网络题型": 8 };
     const ids = [];
     const reviewLimit = state.activeMode === "daily" ? 3 : 2;
     const reviewIds = reviewQuestionCandidates(pool, reviewLimit)
@@ -14261,7 +14960,8 @@ window.SOURCE_LAW_QUESTIONS = [
         <div class="filter-group">
           <label>题源</label>
           <button class="filter-button ${filters.source === "all" ? "is-active" : ""}" type="button" data-action="filter-question-source" data-source="all">全部</button>
-          <button class="filter-button ${filters.source === "source" ? "is-active" : ""}" type="button" data-action="filter-question-source" data-source="source">资料原题</button>
+          <button class="filter-button ${filters.source === "source" ? "is-active" : ""}" type="button" data-action="filter-question-source" data-source="source">资料与真题</button>
+          <button class="filter-button ${filters.source === "shandong" ? "is-active" : ""}" type="button" data-action="filter-question-source" data-source="shandong">山东题源</button>
           <button class="filter-button ${filters.source === "training" ? "is-active" : ""}" type="button" data-action="filter-question-source" data-source="training">训练题</button>
         </div>
         <div class="filter-group">
@@ -14712,6 +15412,7 @@ window.SOURCE_LAW_QUESTIONS = [
     const modeOrder = ["daily", "postgrad", "bar"];
     const textbookToc = DATA.textbookToc || [];
     const sourceCount = questions.filter((question) => question.sourceGroup === "资料原题").length;
+    const shandongCount = questions.filter((question) => String(question.sourceGroup || "").startsWith("山东")).length;
     const webCount = questions.filter((question) => question.sourceGroup === "网络题型").length;
     const typeCounts = Object.keys(types).map((type) => ({
       type,
@@ -14752,10 +15453,11 @@ window.SOURCE_LAW_QUESTIONS = [
         <div class="section-head"><h3>题库容量</h3><span>全库 ${questions.length} 道</span></div>
         <div class="chip-row">
           <span class="chip">资料原题 ${sourceCount}</span>
+          <span class="chip">山东题源 ${shandongCount}</span>
           <span class="chip">网络题型 ${webCount}</span>
           ${typeCounts.map((item) => `<span class="chip">${escapeHtml(item.label)} ${item.count}</span>`).join("")}
         </div>
-        <div class="source-line">资料原题排在训练题前面。每个章节都有一组“读、练、忆、复盘”的入口；题目可以在题库里按题型、章节、题源和状态筛选。</div>
+        <div class="source-line">山东高校真题与题源优先，其次是资料原题。每个章节都有一组“读、练、忆、复盘”的入口；题目可以在题库里按题型、章节、题源和状态筛选。</div>
       </section>
       <section class="panel panel-pad" style="margin-top:18px">
         <div class="section-head"><h3>三个模式，三种练法</h3><span>题型配比是可调的学习默认值</span></div>
