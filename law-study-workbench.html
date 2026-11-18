@@ -2901,6 +2901,168 @@ textarea:hover {
 }
 
   </style>
+  <style id="dsh-compact-topbar">
+  /* ===== 紧凑顶栏（本 App 定制） ===== */
+  .topbar {
+    min-height: 0;
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .brand { gap: 8px; }
+
+  .brand-mark {
+    width: 26px;
+    height: 30px;
+    font-size: calc(15px * var(--text-scale));
+  }
+
+  .brand h1 {
+    font-size: calc(15px * var(--text-scale));
+    letter-spacing: 0;
+    line-height: 1.2;
+  }
+
+  .brand p {
+    margin-top: 1px;
+    font-size: calc(10px * var(--text-scale));
+    letter-spacing: 0.04em;
+  }
+
+  .brand .dsh-ver {
+    align-self: flex-start;
+    margin-top: 1px;
+    padding: 0 4px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    color: var(--muted);
+    font-family: var(--font-ui);
+    font-size: calc(9px * var(--text-scale));
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+  }
+
+  details.copyright-notice {
+    display: block;
+    flex: 0 0 auto;
+    padding: 0;
+    color: #66685f;
+  }
+
+  details.copyright-notice > summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 1px 0;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-serif);
+    font-size: calc(10px * var(--text-scale));
+    letter-spacing: 0.06em;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  details.copyright-notice > summary::-webkit-details-marker { display: none; }
+
+  details.copyright-notice > summary::after {
+    content: "查看";
+    padding: 0 4px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    color: var(--muted-light);
+    font-size: calc(9px * var(--text-scale));
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+  }
+
+  details.copyright-notice[open] > summary::after { content: "收起"; }
+
+  details.copyright-notice[open] {
+    max-height: 46vh;
+    overflow: auto;
+  }
+
+  details.copyright-notice .copyright-items { margin-top: 5px; }
+
+  .segment { min-height: 0; }
+
+  .segment button {
+    min-height: 26px;
+    padding: 0 10px;
+    font-size: calc(12px * var(--text-scale));
+  }
+
+  .icon-button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .icon-button svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  @media (max-width: 620px) {
+    .topbar {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px 8px;
+      padding: 6px 12px 8px;
+    }
+
+    .topbar-controls { display: contents; }
+
+    .brand { order: 1; }
+
+    .top-actions {
+      order: 2;
+      width: auto;
+      margin-left: auto;
+    }
+
+    #courseSegment {
+      order: 3;
+      flex: 1 1 0;
+      width: auto;
+    }
+
+    #modeSegment {
+      order: 4;
+      flex: 1 1 0;
+      width: auto;
+    }
+
+    #courseSegment button,
+    #modeSegment button {
+      flex: 1;
+      padding: 0 4px;
+    }
+
+    details.copyright-notice {
+      order: 5;
+      flex: 0 0 100%;
+      width: 100%;
+      max-width: none;
+      min-width: 0;
+    }
+
+    .search-panel {
+      top: 62px;
+      max-height: calc(100vh - 84px);
+    }
+  }
+  </style>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#eef0ea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="法学工作台">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 </head>
 <body>
   <a class="skip-link" href="#main">跳到主内容</a>
@@ -2913,17 +3075,18 @@ textarea:hover {
           <h1>法学学习工作台</h1>
           <p>宪法学 · 法理学</p>
         </div>
+        <span class="dsh-ver">v1.3</span>
       </div>
 
-      <section class="copyright-notice" aria-label="版权与免责声明">
-        <strong>版权与免责声明 ©</strong>
+      <details class="copyright-notice" aria-label="版权与免责声明" open>
+        <summary><strong>版权与免责声明 ©</strong></summary>
         <div class="copyright-items">
-          <span>1. 本工作台为山东政法学院李昕阳自主构建，仅供本人及同学内部学习交流，严禁商业用途。</span>
-          <span>2. AI 生成题目可能存在疏漏，不替代教材、课堂与官方参考答案。</span>
+          <span>1. 本工作台为山东政法学院民商法学院李昕阳自主构建，仅供本人及同学内部学习交流，严禁商业用途。</span>
+          <span>2. AI 辅助整理和制作的题目可能存在疏漏，不替代教材、课堂与官方参考答案。</span>
           <span>3. 所有素材仅限学习，请勿私自转载、打包分发或上架各类平台。</span>
           <span>4. 如引用内容涉及版权问题，请联系制作者处理。</span>
         </div>
-      </section>
+      </details>
 
       <div class="topbar-controls">
         <div class="segment" id="courseSegment" role="tablist" aria-label="课程">
@@ -16387,6 +16550,14 @@ window.SOURCE_LAW_QUESTIONS = [
   }
 })();
 
+  </script>
+
+  <script>
+  if ("serviceWorker" in navigator && location.protocol === "https:") {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
   </script>
 </body>
 </html>
